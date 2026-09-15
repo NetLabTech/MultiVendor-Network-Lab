@@ -6,17 +6,21 @@ This project demonstrates realistic WAN/LAN design, BGP peering, NAT, VLAN segme
 📡 Topology Overview
 This lab simulates:
 
-A fake ISP router (Cisco vIOS) with loopback 8.8.8.8
+![Topology Diagram](https://github.com/NetLabTech/MultiVendor-Network-Lab/blob/fe7c79b6f221ca38569ccc84d4420490c4efa20e/Screenshot%202026-09-15%20at%2020.54.37.png)
 
-A Juniper EVO WAN edge router
+- A simulated ISP router (Cisco vIOS) with loopback 8.8.8.8
 
-A Fortinet firewall providing security policy enforcement
+- A Juniper EVO WAN edge router
 
-A Juniper vEX distribution router
+- A Fortinet firewall providing security policy enforcement
 
-Two Cisco access switches
+- A Juniper vEX distribution router
 
-Multiple VPC clients
+- Two Cisco access switches
+
+- Multiple VPC clients
+
+
 
 Full WAN + LAN routing, NAT, VLANs, and firewall policies
 
