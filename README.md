@@ -1,102 +1,45 @@
+Multi-Vendor Network Lab (EVE-NG)
 
-MultiVendor Network Lab — Enterprise + ISP Simulation
-A full multi‑vendor enterprise and ISP simulation lab built in EVE‑NG using Juniper EVO, Juniper vEX, Cisco vIOS, Cisco switches, Fortinet firewall, and VPC hosts.
-This project demonstrates realistic WAN/LAN design, BGP peering, NAT, VLAN segmentation, firewalling, and multi‑vendor routing — ideal for CCNP‑level learning and MSP workflows.
+Multi-vendor lab environment covering routing, switching, and security design across Juniper, Cisco, and Fortinet platforms, built on bare-metal EVE-NG.
 
-📡 Topology Overview
-This lab simulates:
-
-![Topology Diagram](https://github.com/NetLabTech/MultiVendor-Network-Lab/blob/fe7c79b6f221ca38569ccc84d4420490c4efa20e/Screenshot%202026-09-15%20at%2020.54.37.png)
-
-- A simulated ISP router (Cisco vIOS) with loopback 8.8.8.8
-
-- A Juniper EVO WAN edge router
-
-- A Fortinet firewall providing security policy enforcement
-
-- A Juniper vEX distribution router
-
-- Two Cisco access switches
-
-- Multiple VPC clients
+Scope
+Cross-vendor interop and troubleshooting (Juniper / Cisco / Fortinet)
+Core → distribution → security → access design
+Junos (JNCIS-ENT / JNCIP-ENT level) alongside Cisco IOS-XE
+FortiGate HA pair with dedicated sync link
+Topology
 
 
+![Topology Diagram](...)
 
-Full WAN + LAN routing, NAT, VLANs, and firewall policies
 
-🧩 Devices Used
-Cisco vIOS (ISP simulation)
+Design:
 
-Juniper EVO (WAN edge)
+Core (Juniper vMX pair): VCP/VFP pair, full mesh to both CSRs
+Distribution (Cisco CSR1000v pair): dual-homed to both vMX nodes, mesh + dynamic routing for failover
+Security perimeter (FortiGate pair): 1:1 links only, dedicated HA sync link between the two
+Access/distribution switching (Cisco IOL L3): one per firewall, 1:1, VLANs/SVIs to follow
 
-Fortinet Firewall
+Design:
 
-Juniper vEX (distribution layer)
+Core (Juniper vMX pair): VCP/VFP pair, full mesh to both CSRs
+Distribution (Cisco CSR1000v pair): dual-homed to both vMX nodes, mesh + dynamic routing for failover
+Security perimeter (FortiGate pair): 1:1 links only, dedicated HA sync link between the two
+Access/distribution switching (Cisco IOL L3): one per firewall, 1:1, VLANs/SVIs to follow
+Devices & Images
+Role	Device	Image	Notes
+Core router (control plane)	vMX-VCP / vMX-VCP2	vmxvcp-24.4R1.9	3-disk VCP image; all config done here
+Core router (forwarding plane)	vMX-VFP / vMX-VFP2	vmxvfp-24.4R1.9	Single-disk VFP; no CLI config, just forwarding
+Distribution router	CSR1 / CSR2	Cisco CSR1000v / IOS-XE	
+Firewall	Fortinet1 / Fortinet2	FortiGate VM	HA pair
+L3 switch	L3-Switch1 / L3-Switch2	Cisco IOL (i86bi_linux_l2-adventerprisek9-ms.SSA.high_iron_20190423)	L2-named image, runs full L3 switching (SVIs, etherchannel) on Catalyst 3750 code
+IP Addressing
 
-Cisco IOSvL2 switches
+/30 point-to-point links carved out of 10.1.1.0/27.
 
-VPC hosts
-
-🌐 WAN / ISP Simulation
-The ISP router provides:
-
-Loopback: 8.8.8.8/32
-
-WAN link: 203.0.113.2/30
-
-BGP ASN: 65000
-
-EVO peers with the ISP using:
-
-WAN link: 203.0.113.1/30
-
-BGP ASN: 65001
-
-This creates a realistic enterprise‑to‑ISP edge.
-
-🔐 Firewall Integration
-The Fortinet firewall sits between EVO and vEX, enforcing:
-
-Trust / Untrust zones
-
-NAT policies
-
-Security rules
-
-Logging and inspection
-
-Traffic flows:
-
-EVO → Fortinet → vEX → Cisco switches → VPCs
-
-🏠 LAN Design
-The LAN includes:
-
-VLAN segmentation
-
-Inter‑VLAN routing
-
-Access switching
-
-VPC clients for testing
-
-DHCP (optional)
-
-DNS (optional)
-
-📘 Key Technologies Demonstrated
-BGP peering
-
-NAT
-
-VLAN segmentation
-
-Firewall policies
-
-Enterprise routing
-
-ISP simulation
-
-Multi‑vendor interoperability
-
-EVE‑NG topology design
+Link	Side A	Side B
+vMX-VCP ge-0/0/0 ↔ CSR1 Gi1	10.1.1.1/30	10.1.1.2/30
+vMX-VCP ge-0/0/1 ↔ CSR2 Gi2	10.1.1.5/30	10.1.1.6/30
+vMX-VCP2 ge-0/0/0 ↔ CSR2 Gi1	10.1.1.9/30	10.1.1.10/30
+vMX-VCP2 ge-0/0/1 ↔ CSR1 Gi2	10.1.1.13/30	10.1.1.14/30
+vMX-VCP ge-0/0/9 ↔ vMX-VCP2 ge-0/0/9	10.1.1.17/30	10.1.1.18/30
